@@ -11,17 +11,24 @@ import "./Audit.css";
 
 class Auditpage extends React.Component {
 
-    state={
+    constructor(props) {
+        super(props);
+    this.state={
         usersList:[],
         searchValue:'',
         currentPage:1,
         usersPerPage:10,
         timeFormat:'24',
     }
+    
+}
 
     componentDidMount() {
+        
         this.props.getUsers();
+        
     }
+    
 
     handleDeleteUser(id) {
         return (e) => this.props.deleteUser(id);
@@ -59,6 +66,14 @@ class Auditpage extends React.Component {
           this.setState({usersList:searchResult})
       }
 
+    // Change page
+    paginate = (number) => {
+        const page = number
+        this.setState({currentPage:page})
+    }
+
+
+    //Change Date Format
 
     formatDate=(date)=> {
     let dt = new Date(date),
@@ -115,7 +130,7 @@ class Auditpage extends React.Component {
             timewithStamp = [hour,minute,seconds].join(':')
             timewithStamp = timewithStamp+'AM'
         } else{
-            //hour = parseInt(hour, 10) + 12;
+            
             if (minute.length<2){
                 minute = '0' + minute;
             }
@@ -158,21 +173,17 @@ class Auditpage extends React.Component {
         return timewithStamp
     }
 
-    // Change page
-    paginate = pageNumber => this.setState({currentPage:pageNumber});
+  
 
     renderAuditTable=()=>{
-        const {user,users} = this.props
-
+        const {users} = this.props
         const {usersList,searchValue,currentPage,usersPerPage,timeFormat} = this.state
 
         // Get current users
         const indexOfLastUser = currentPage * usersPerPage;
         const indexOfFirstUser = indexOfLastUser - usersPerPage;
         const currentUsers = users.items.slice(indexOfFirstUser, indexOfLastUser);
-        
-        console.log("current page");
-        console.log(currentPage);
+
         // For applying search functionality 
         const list = usersList.length>0&& searchValue.length!==0?usersList:currentUsers
 
@@ -244,12 +255,12 @@ class Auditpage extends React.Component {
                 )}
                 
             </ul>
-                
-                <Pagination
-                    usersPerPage={usersPerPage}
-                    totalUsers={users.items.length}
-                    paginate={this.paginate}
-                />
+  
+            <Pagination
+                usersPerPage={usersPerPage}
+                totalUsers={users.items.length}
+                paginate={this.paginate}
+            />
             </React.Fragment>
         )
     }
