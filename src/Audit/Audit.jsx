@@ -7,7 +7,7 @@ import {FcGenericSortingAsc,FcGenericSortingDesc} from 'react-icons/fc'
 import { Navbar, Nav } from 'react-bootstrap';
 import Pagination from '../Pagination'
 import "./Audit.css";
-import AuditUsersList from '../AuditUsersList/AuditUsersList';
+
 
 class Auditpage extends React.Component {
 
@@ -16,7 +16,7 @@ class Auditpage extends React.Component {
         searchValue:'',
         currentPage:1,
         usersPerPage:10,
-        timeFormat:'24'
+        timeFormat:'24',
     }
 
     componentDidMount() {
@@ -158,19 +158,21 @@ class Auditpage extends React.Component {
         return timewithStamp
     }
 
+    // Change page
+    paginate = pageNumber => this.setState({currentPage:pageNumber});
+
     renderAuditTable=()=>{
         const {user,users} = this.props
 
         const {usersList,searchValue,currentPage,usersPerPage,timeFormat} = this.state
+
         // Get current users
         const indexOfLastUser = currentPage * usersPerPage;
         const indexOfFirstUser = indexOfLastUser - usersPerPage;
         const currentUsers = users.items.slice(indexOfFirstUser, indexOfLastUser);
         
-        // Change page
-        const paginate = pageNumber => this.setState({currentPage:pageNumber});
-        console.log("current page")
-        console.log(currentPage)
+        console.log("current page");
+        console.log(currentPage);
         // For applying search functionality 
         const list = usersList.length>0&& searchValue.length!==0?usersList:currentUsers
 
@@ -240,13 +242,13 @@ class Auditpage extends React.Component {
                     </li>
                     )}
                 )}
-                {/* <AuditUsersList list={list} handleDeleteUser={this.handleDeleteUser}/> */}
+                
             </ul>
                 
                 <Pagination
                     usersPerPage={usersPerPage}
                     totalUsers={users.items.length}
-                    paginate={paginate}
+                    paginate={this.paginate}
                 />
             </React.Fragment>
         )
